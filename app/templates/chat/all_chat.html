@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ g.user.username }}
+{% endblock title %}
+
+{% block content %}
+    <div class="module-all">
+        {% for relation in g.user.friends %}
+            <a href="{{ url_for('chat.room', username=relation.friend.username) }}">{{ relation.friend.username }}</a>
+        {% endfor %}
+    </div>
+{% endblock content %}

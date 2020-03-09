@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="module-form">
+        <form method="post">
+            <h2>
+                {% block title %}Login{% endblock title %}
+            </h2>
+            {{ form.hidden_tag() }}
+            {% for _, errors in form.errors.items() %}
+                {% for error in errors %}
+                    <p class="error">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            <p>
+                {{ form.username.label }}
+                {{ form.username }}
+            </p>
+            <p>
+                {{ form.password.label }}
+                {{ form.password }}
+            </p>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+{% endblock content %}

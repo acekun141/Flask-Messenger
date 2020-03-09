@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+{% endblock script %}
+
+{% block content %}
+    <div class="module-chat">
+        <h2>
+            {% block title %}
+                {{ user.username }}
+            {% endblock title %}
+        </h2>
+        <div id='box-chat'>
+            {% for message in channel.messages %}
+                <p><b>{{ message.auth.username }}: </b>{{ message.message }}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <input type="text" name="message" id="message">
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var send_message = document.getElementById('sendMessage')
+        var message = document.getElementById('message')
+        var box_chat = document.getElementById('box-chat')
+        var socket = io();
+        socket.on('connect', function() {
+            socket.emit('joined', {});
+        });
+        socket.on('status', function(data) {
+            console.log(data.msg)
+        });
+        socket.on('message', function(data) {
+            var msg = '<p>' + '<b>' + data.user + '</b>: ' + data.msg + '</p>';
+            box_chat.innerHTML += msg;
+        });
+        send_message.addEventListener('click', function(){
+            var msg = message.value;
+            socket.emit('send_message', {'msg': msg, 'user': '{{ user.username }}' });
+            message.value = '';
+        });
+    </script>
+{% endblock content %}
